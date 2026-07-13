@@ -66,20 +66,26 @@ npm run preflight:base-sepolia
 
 The preflight validates `PRIVATE_KEY` without printing it, connects to the configured Base Sepolia RPC endpoint, refuses any chain ID other than `84532`, and prints only the chain ID, deployer address, and ETH balance. It performs no transaction.
 
-## Deploy
+## Controlled Base Sepolia deployment
+
+Run these commands in order:
 
 ```bash
+npm run preflight:base-sepolia
 npm run deploy:base-sepolia
+npm run verify:base-sepolia:recorded
 ```
 
-Save the emitted contract address and transaction hash. Confirm that the deployer address is the intended initial holder before deploying because the full supply is assigned irreversibly in the constructor.
+The deployment command refuses any chain ID other than `84532` and refuses to replace an existing `deployments/base-sepolia.json` record. For an intentional replacement only, set `ALLOW_DEPLOYMENT_OVERWRITE=true` locally and rerun the complete checklist. The deployment record contains public deployment metadata only and never contains the private key or another secret.
+
+Confirm that the deployer address is the intended initial holder before deploying because the full supply is assigned irreversibly in the constructor. Tag `v0.1.0-testnet` only after the Base Sepolia deployment and recorded-address verification both succeed. Do not create the tag before those two steps are complete.
 
 ## Verify on BaseScan
 
-After setting `BASESCAN_API_KEY`, replace the address below with the deployed contract address:
+After setting `BASESCAN_API_KEY`, verify the validated address in `deployments/base-sepolia.json`:
 
 ```bash
-npm run verify:base-sepolia -- 0xDEPLOYED_CONTRACT_ADDRESS
+npm run verify:base-sepolia:recorded
 ```
 
 The constructor takes no arguments.
@@ -89,8 +95,12 @@ The constructor takes no arguments.
 ```text
 contracts/VoiceSafeToken.sol  Fixed-supply ERC-20 implementation
 scripts/deploy.ts             Base Sepolia-compatible deployment script
+scripts/deployment-record.ts  Validated deployment record persistence
 scripts/preflight.ts          Read-only Base Sepolia deployment validation
 scripts/preflight-utils.ts    Testable key and chain validation helpers
+scripts/verify-recorded.ts    BaseScan verification from the deployment record
+scripts/verification-utils.ts Verification prerequisite validation
+test/DeploymentRecord.ts      Record validation and overwrite safety tests
 test/VoiceSafeToken.ts        Metadata, supply, transfer, and mint-surface tests
 test/Preflight.ts             Preflight key and chain safety tests
 hardhat.config.ts             Compiler and network configuration
