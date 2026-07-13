@@ -1,0 +1,29 @@
+{
+  "name": "voicesafe-token",
+  "version": "1.0.0",
+  "private": true,
+  "description": "VoiceSafe Token (VSAFE) ERC-20 smart contract and deployment tooling",
+  "license": "MIT",
+  "scripts": {
+    "clean": "hardhat clean",
+    "compile": "hardhat compile",
+    "typecheck": "tsc --noEmit",
+    "test": "hardhat test",
+    "coverage": "hardhat test --coverage",
+    "deploy:base-sepolia": "hardhat run scripts/deploy.ts --network baseSepolia",
+    "verify:base-sepolia": "hardhat verify --network baseSepolia"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox-mocha-ethers": "^3.0.7",
+    "@openzeppelin/contracts": "^5.4.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.0.0",
+    "dotenv": "^17.2.3",
+    "hardhat": "^3.9.1",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "type": "module"
+}

@@ -141,3 +141,13 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Hardhat and local validation output
+artifacts/
+cache/
+coverage.json
+typechain-types/
+types/
+.appdata/
+.appdata-local/
+.npm-cache/
