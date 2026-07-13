@@ -1,0 +1,14 @@
+{
+  "network": "baseSepolia",
+  "chainId": 84532,
+  "contractName": "VoiceSafeToken",
+  "contractAddress": "0xf35da3ad45345fbab5f8f9ee425858bcefd11249",
+  "deploymentTransactionHash": "0xbc1c6c653d3a0927c621090496723ab8fffcb9e51ac73f62671524a6500db600",
+  "deployerAddress": "0xCcAf6514C820498DA2EA1270D9c34Bf7481bADF9",
+  "blockNumber": 44105945,
+  "timestamp": "2026-07-13T22:02:58.000Z",
+  "tokenName": "VoiceSafe Token",
+  "tokenSymbol": "VSAFE",
+  "decimals": 18,
+  "totalSupply": "100000000000000000000000000"
+}

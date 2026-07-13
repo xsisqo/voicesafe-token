@@ -7,6 +7,7 @@ import {
   isDeploymentOverwriteAllowed,
   writeDeploymentRecord,
 } from "./deployment-record.js";
+import { resolveDeploymentTimestamp } from "./deployment-timestamp.js";
 import { assertBaseSepoliaChainId, validatePrivateKey } from "./preflight-utils.js";
 
 async function main(): Promise<void> {
@@ -37,11 +38,22 @@ async function main(): Promise<void> {
   if (receipt === null) {
     throw new Error("Deployment transaction was not mined.");
   }
+  const receiptObservedAt = new Date();
+
+  console.log(`Deployment transaction mined: ${deploymentTransaction.hash}`);
+  console.log(`Deployment receipt block: ${receipt.blockNumber}`);
 
   await token.waitForDeployment();
-  const block = await ethers.provider.getBlock(receipt.blockNumber);
-  if (block === null) {
-    throw new Error(`Unable to read deployment block ${receipt.blockNumber}.`);
+  const deploymentTimestamp = await resolveDeploymentTimestamp(
+    ethers.provider,
+    receipt.blockNumber,
+    { fallbackTimestamp: receiptObservedAt },
+  );
+  if (deploymentTimestamp.source === "receipt-observed-at") {
+    console.warn(
+      `Warning: deployment block ${receipt.blockNumber} remained unavailable after bounded read-only retries. ` +
+      `Using receipt observation time ${deploymentTimestamp.timestamp}; the mined deployment will not be retried.`,
+    );
   }
 
   const [address, tokenName, tokenSymbol, decimals, totalSupply] = await Promise.all([
@@ -60,7 +72,7 @@ async function main(): Promise<void> {
     deploymentTransactionHash: deploymentTransaction.hash,
     deployerAddress: deployer.address,
     blockNumber: receipt.blockNumber,
-    timestamp: new Date(Number(block.timestamp) * 1_000).toISOString(),
+    timestamp: deploymentTimestamp.timestamp,
     tokenName,
     tokenSymbol,
     decimals: Number(decimals),

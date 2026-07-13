@@ -78,6 +78,8 @@ npm run verify:base-sepolia:recorded
 
 The deployment command refuses any chain ID other than `84532` and refuses to replace an existing `deployments/base-sepolia.json` record. For an intentional replacement only, set `ALLOW_DEPLOYMENT_OVERWRITE=true` locally and rerun the complete checklist. The deployment record contains public deployment metadata only and never contains the private key or another secret.
 
+After a successful receipt, the script makes three bounded, read-only attempts to obtain the deployment block timestamp. A temporary block lookup failure never triggers another deployment and never changes the successful receipt into a failed deployment. If the block remains unavailable, the record uses the UTC time captured locally immediately after the receipt was returned and prints a warning that identifies this safe fallback. The block timestamp remains preferred whenever it is available.
+
 Confirm that the deployer address is the intended initial holder before deploying because the full supply is assigned irreversibly in the constructor. Tag `v0.1.0-testnet` only after the Base Sepolia deployment and recorded-address verification both succeed. Do not create the tag before those two steps are complete.
 
 ## Verify on BaseScan
@@ -96,11 +98,13 @@ The constructor takes no arguments.
 contracts/VoiceSafeToken.sol  Fixed-supply ERC-20 implementation
 scripts/deploy.ts             Base Sepolia-compatible deployment script
 scripts/deployment-record.ts  Validated deployment record persistence
+scripts/deployment-timestamp.ts Bounded timestamp lookup and mined-receipt fallback
 scripts/preflight.ts          Read-only Base Sepolia deployment validation
 scripts/preflight-utils.ts    Testable key and chain validation helpers
 scripts/verify-recorded.ts    BaseScan verification from the deployment record
 scripts/verification-utils.ts Verification prerequisite validation
 test/DeploymentRecord.ts      Record validation and overwrite safety tests
+test/DeploymentTimestamp.ts   Post-receipt block lookup resilience tests
 test/VoiceSafeToken.ts        Metadata, supply, transfer, and mint-surface tests
 test/Preflight.ts             Preflight key and chain safety tests
 hardhat.config.ts             Compiler and network configuration
