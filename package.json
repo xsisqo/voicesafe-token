@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "hardhat test",
     "coverage": "hardhat test --coverage",
+    "preflight:base-sepolia": "tsx scripts/preflight.ts",
     "deploy:base-sepolia": "hardhat run scripts/deploy.ts --network baseSepolia",
     "verify:base-sepolia": "hardhat verify --network baseSepolia"
   },
@@ -19,7 +20,9 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.0.0",
     "dotenv": "^17.2.3",
+    "ethers": "^6.17.0",
     "hardhat": "^3.9.1",
+    "tsx": "^4.23.1",
     "typescript": "^5.9.3"
   },
   "engines": {
