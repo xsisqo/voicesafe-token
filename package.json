@@ -9,10 +9,11 @@
     "compile": "hardhat compile",
     "typecheck": "tsc --noEmit",
     "test": "hardhat test",
-    "coverage": "hardhat test --coverage",
+    "coverage": "tsx scripts/coverage.ts",
+    "build:clean": "hardhat clean && hardhat compile",
     "preflight:base-sepolia": "tsx scripts/preflight.ts",
-    "deploy:base-sepolia": "hardhat run scripts/deploy.ts --network baseSepolia",
-    "verify:base-sepolia": "hardhat verify --network baseSepolia",
+    "deploy:base-sepolia": "npm run build:clean && hardhat run scripts/deploy.ts --network baseSepolia",
+    "verify:base-sepolia": "npm run build:clean && hardhat verify --network baseSepolia",
     "verify:base-sepolia:recorded": "tsx scripts/verify-recorded.ts"
   },
   "devDependencies": {

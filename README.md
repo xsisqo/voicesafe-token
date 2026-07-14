@@ -35,6 +35,8 @@ To produce a Solidity coverage report:
 npm run coverage
 ```
 
+Coverage temporarily instruments the Solidity build. The coverage command always follows the report with `hardhat clean` and a normal compile so instrumented artifacts cannot be reused later. The deployment and verification commands also enforce their own clean, non-coverage build before proceeding.
+
 ## Configure Base Sepolia
 
 Copy `.env.example` to `.env` and provide a dedicated deployment key:
@@ -90,6 +92,8 @@ After setting `BASESCAN_API_KEY`, verify the validated address in `deployments/b
 npm run verify:base-sepolia:recorded
 ```
 
+**Verification must always use a clean, non-coverage build.** The recorded-address helper runs `hardhat clean`, performs a normal compile, and only then starts verification. Do not invoke verification from coverage artifacts. Optional Blockscout submission is disabled because its response must not turn a successful BaseScan verification into an overall failure; BaseScan and Sourcify remain enabled.
+
 The constructor takes no arguments.
 
 ## Project layout
@@ -99,12 +103,15 @@ contracts/VoiceSafeToken.sol  Fixed-supply ERC-20 implementation
 scripts/deploy.ts             Base Sepolia-compatible deployment script
 scripts/deployment-record.ts  Validated deployment record persistence
 scripts/deployment-timestamp.ts Bounded timestamp lookup and mined-receipt fallback
+scripts/hardhat-workflows.ts  Clean build, coverage restoration, and verification sequencing
+scripts/coverage.ts           Coverage runner that restores production artifacts
 scripts/preflight.ts          Read-only Base Sepolia deployment validation
 scripts/preflight-utils.ts    Testable key and chain validation helpers
 scripts/verify-recorded.ts    BaseScan verification from the deployment record
 scripts/verification-utils.ts Verification prerequisite validation
 test/DeploymentRecord.ts      Record validation and overwrite safety tests
 test/DeploymentTimestamp.ts   Post-receipt block lookup resilience tests
+test/HardhatWorkflows.ts      Clean build and coverage restoration workflow tests
 test/VoiceSafeToken.ts        Metadata, supply, transfer, and mint-surface tests
 test/Preflight.ts             Preflight key and chain safety tests
 hardhat.config.ts             Compiler and network configuration

@@ -26,6 +26,9 @@ export default defineConfig({
     },
   },
   verify: {
+    blockscout: {
+      enabled: false,
+    },
     etherscan: {
       apiKey: process.env.BASESCAN_API_KEY ?? "",
     },
